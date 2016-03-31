@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/grunmax/TestServers/httpserver"
 	"github.com/grunmax/TestServers/tcpserver"
 	"github.com/grunmax/TestServers/util"
 )
@@ -14,5 +15,6 @@ func init() {
 }
 
 func main() {
-	tcpserver.Run(cfgTcp)
+	go tcpserver.Run(cfgTcp)
+	httpserver.Run(cfgHttp)
 }

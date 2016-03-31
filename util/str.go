@@ -23,12 +23,15 @@ func RegSplit(text string, delimeter string) []string {
 	return list
 }
 
-func RuneCountFilterList(list []string, minCount int) []string {
-	var result []string
+func WordsCheckList(list []string, minCount int) ([]string, []string) {
+	var resultOk []string
+	var resultBad []string
 	for _, word := range list {
 		if utf8.RuneCountInString(word) >= minCount {
-			result = append(result, word)
+			resultOk = append(resultOk, word)
+		} else {
+			resultBad = append(resultBad, word)
 		}
 	}
-	return result
+	return resultOk, resultBad
 }

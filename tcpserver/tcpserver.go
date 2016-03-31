@@ -7,24 +7,22 @@ import (
 	"github.com/grunmax/TestServers/util"
 )
 
-const (
-	PROTOCOL = "tcp"
-)
+const PROTOCOL = "tcp"
 
 func Run(cfg *util.TcpConfig) {
 	listener, err := net.Listen(PROTOCOL, fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
-	util.Err("Error listening:", err)
-	fmt.Println(fmt.Sprintf("Listening %s on %s:%d", PROTOCOL, cfg.Host, cfg.Port))
+	util.Err("Error tcp listening:", err)
+	util.Log(fmt.Sprintf("Listening %s on %s:%d", PROTOCOL, cfg.Host, cfg.Port), "")
 	defer listener.Close()
 
 	for {
 		connection, err := listener.Accept()
 		util.Err("Error accepting:", err)
-		go handleReq(connection, cfg.BufferSize, cfg.MinRunes)
+		go handler(connection, cfg.BufferSize, cfg.MinRunes)
 	}
 }
 
-func handleReq(connection net.Conn, bufferSize int, minRunes int) {
+func handler(connection net.Conn, bufferSize int, minRunes int) {
 	buffer := make([]byte, bufferSize)
 	defer connection.Close()
 
@@ -56,8 +54,8 @@ func handleReq(connection net.Conn, bufferSize int, minRunes int) {
 	} else {
 		inputData := string(buffer[:bufferLength-1])
 		inputList := util.RegSplit(inputData, "[^\\S]+")
-		util.Log("TCP received:", inputList)
-		inputFilteredList := util.RuneCountFilterList(inputList, minRunes)
-		connWrite(bufferLength, len(inputFilteredList))
+		okList, badList := util.WordsCheckList(inputList, minRunes)
+		util.Log("TCP words:", fmt.Sprintf("%v not %v", inputList, badList))
+		connWrite(bufferLength, len(okList))
 	}
 }

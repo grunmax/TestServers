@@ -2,8 +2,8 @@
 Test golang project with tcp and http servers.
 
 ### tcp server
-Here config params:
- - host = localhost // any xxx.xxx.xxx.xxx
+Config params in INI file:
+ - host = localhost //
  - port = 9000 //
  - buffersize = 2048 //bytes read
  - minrunes = 3 //word consist of 3 chars at least
@@ -17,7 +17,12 @@ TCP response:
 ```sh
 tcp:ok:38:5
 ```
-> tcp - constant part, ok/err - result, 38 - bytes received, 5 - words accepted
+> tcp - constant part, ok/err - result, 38 - bytes received, 5 - words accepted count
+> err - result with no words accepted
 
 
 ### http server
+
+Config params in INI file:
+ - host = localhost //
+ - port = 8000 //
