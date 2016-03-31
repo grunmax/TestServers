@@ -1,2 +1,2 @@
 # TestServers
-test project
+test golang project
