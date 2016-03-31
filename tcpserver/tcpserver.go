@@ -20,17 +20,17 @@ func Run(cfg *util.TcpConfig) {
 	for {
 		connection, err := listener.Accept()
 		util.Err("Error accepting:", err)
-		go handleReq(connection, cfg.BufferSize, cfg.MinBuffersize)
+		go handleReq(connection, cfg.BufferSize, cfg.MinRunes)
 	}
 }
 
-func handleReq(connection net.Conn, bufferSize int, minBuffersize int) {
+func handleReq(connection net.Conn, bufferSize int, minRunes int) {
 	buffer := make([]byte, bufferSize)
 	defer connection.Close()
 
-	connWrite := func(code int, isOk bool) {
-		const ANSWER_OK = "tcp:ok:%d\n"
-		const ANSWER_ERR = "tcp:err:%d"
+	connWriteln := func(bytes, words int, isOk bool) {
+		const ANSWER_OK = "tcp:ok:%d:%d\n"
+		const ANSWER_ERR = "tcp:err:%d:%d\n"
 
 		var err error
 		response := ""
@@ -39,19 +39,25 @@ func handleReq(connection net.Conn, bufferSize int, minBuffersize int) {
 		} else {
 			response = ANSWER_ERR
 		}
-		_, err = connection.Write([]byte(fmt.Sprintf(response, code)))
+		_, err = connection.Write([]byte(fmt.Sprintf(response, bytes, words)))
 		util.Log("Error tcp writing:", err)
+	}
+
+	connWrite := func(buflen, len_ int) {
+		if len_ > 0 {
+			connWriteln(buflen, len_, true)
+		} else {
+			connWriteln(buflen, len_, false)
+		}
 	}
 
 	if bufferLength, err := connection.Read(buffer); err != nil {
 		util.Log("Error tcp reading:", err)
-	} else if bufferLength < minBuffersize {
-		util.Log("Wrong tcp data length:", bufferLength)
-		connWrite(bufferLength, false)
 	} else {
 		inputData := string(buffer[:bufferLength-1])
-		util.Log("TCP received:", inputData+"#")
-		connWrite(bufferLength, true)
+		inputList := util.RegSplit(inputData, "[^\\S]+")
+		util.Log("TCP received:", inputList)
+		inputFilteredList := util.RuneCountFilterList(inputList, minRunes)
+		connWrite(bufferLength, len(inputFilteredList))
 	}
-
 }

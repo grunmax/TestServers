@@ -12,10 +12,10 @@ var errorlog *os.File
 var Logger *log.Logger
 
 type TcpConfig struct {
-	Host          string
-	Port          int
-	BufferSize    int
-	MinBuffersize int
+	Host       string
+	Port       int
+	BufferSize int
+	MinRunes   int
 }
 
 type HttpConfig struct {
@@ -57,23 +57,23 @@ func InitLog() {
 }
 
 func ReadConfig() (*TcpConfig, *HttpConfig) {
-	const MIN_BUFF_SIZE = 6
+	const MIN_RUNES = 2
 
 	iniFile := "testservers.ini"
 	tcpCfg := new(TcpConfig)
 	httpCfg := new(HttpConfig)
 	cfg, err := ini.Load([]byte(""), iniFile)
-	Err("no config file", err)
+	Err("no ini file", err)
 
 	tcpCfg.Host = cfg.Section("tcp").Key("host").String()
 	tcpCfg.Port, err = cfg.Section("tcp").Key("port").Int()
 	Err("Wrong ini-value for tcp port", err)
 	tcpCfg.BufferSize, err = cfg.Section("tcp").Key("buffersize").Int()
 	Err("Wrong ini-value for buffersize", err)
-	tcpCfg.MinBuffersize, err = cfg.Section("tcp").Key("minbuffersize").Int()
-	Err("Wrong ini-value for minbuffersize", err)
-	if tcpCfg.MinBuffersize < MIN_BUFF_SIZE {
-		Err(fmt.Sprintf("Minimal value for for buffersize is %d", MIN_BUFF_SIZE), "")
+	tcpCfg.MinRunes, err = cfg.Section("tcp").Key("minrunes").Int()
+	Err("Wrong ini-value for minrunes", err)
+	if tcpCfg.MinRunes < MIN_RUNES {
+		Err(fmt.Sprintf("Minimal value for word symbols is %d", MIN_RUNES), "")
 	}
 
 	httpCfg.Host = cfg.Section("http").Key("host").String()
