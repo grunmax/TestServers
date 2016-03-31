@@ -1,9 +1,10 @@
 package tcpserver
 
 import (
-	"github.com/grunmax/TestServers/util"
 	"fmt"
 	"net"
+
+	"github.com/grunmax/TestServers/util"
 )
 
 const (
@@ -28,7 +29,7 @@ func handleReq(connection net.Conn, bufferSize int, minBuffersize int) {
 	defer connection.Close()
 
 	connWrite := func(code int, isOk bool) {
-		const ANSWER_OK = "tcp:ok:%d"
+		const ANSWER_OK = "tcp:ok:%d\n"
 		const ANSWER_ERR = "tcp:err:%d"
 
 		var err error
@@ -48,7 +49,7 @@ func handleReq(connection net.Conn, bufferSize int, minBuffersize int) {
 		util.Log("Wrong tcp data length:", bufferLength)
 		connWrite(bufferLength, false)
 	} else {
-		inputData := string(buffer[:bufferLength-3])
+		inputData := string(buffer[:bufferLength-1])
 		util.Log("TCP received:", inputData+"#")
 		connWrite(bufferLength, true)
 	}
