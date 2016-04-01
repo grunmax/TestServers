@@ -17,8 +17,7 @@ TCP response:
 ```sh
 tcp:ok:38:5
 ```
-> tcp - constant part, ok/err - result, 38 - bytes received, 5 - words accepted count
-> err - result with no words accepted
+> tcp - constant part, ok/err - result (err - no words accepted), 38 - bytes received, 5 - words accepted count
 
 
 ### http server
