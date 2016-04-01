@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/grunmax/TestServers/data"
 	"github.com/grunmax/TestServers/util"
 )
 
@@ -55,7 +56,12 @@ func handler(connection net.Conn, bufferSize int, minRunes int) {
 		inputData := string(buffer[:bufferLength-1])
 		inputList := util.RegSplit(inputData, "[^\\S]+")
 		okList, badList := util.WordsCheckList(inputList, minRunes)
-		util.Log("TCP words:", fmt.Sprintf("%v not %v", inputList, badList))
+		if len(badList) == 0 {
+			util.Log("TCP words:", fmt.Sprintf("%v", inputList))
+		} else {
+			util.Log("TCP words:", fmt.Sprintf("%v not %v", inputList, badList))
+		}
+		data.Put(okList)
 		connWrite(bufferLength, len(okList))
 	}
 }

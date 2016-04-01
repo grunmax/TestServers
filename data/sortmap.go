@@ -1,4 +1,4 @@
-package util
+package data
 
 // sort a map's keys in descending order of its values.
 
@@ -31,7 +31,7 @@ func (sMap *SortedMap) Swap(i, j int) {
 	sMap.s[i], sMap.s[j] = sMap.s[j], sMap.s[i]
 }
 
-func GetTopKeys(m map[string]int, count int) []string {
+func getTopByValue(m map[string]int, count int) []string {
 
 	// check count
 	if count > len(m) {
@@ -40,14 +40,8 @@ func GetTopKeys(m map[string]int, count int) []string {
 
 	sMap := new(SortedMap)
 	sMap.m = m
-	//sMap.s = make([]string, len(m))
 	sMap.s = make([]string, 0, len(m))
 
-	//	i := 0
-	//	for key, _ := range m {
-	//		sMap.s[i] = key
-	//		i++
-	//	}
 	for key, _ := range m {
 		sMap.s = append(sMap.s, key)
 	}

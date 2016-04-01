@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/grunmax/TestServers/data"
 	"github.com/grunmax/TestServers/util"
 )
 
@@ -37,8 +38,6 @@ func rootHnd(w http.ResponseWriter, r *http.Request) {
 func gettopHnd(w http.ResponseWriter, r *http.Request) {
 	util.Log("HTTP request:", r.RequestURI)
 
-	list := []string{"apple", "peach", "pear"} // test: data
-
 	nFun := func() string {
 		N := r.URL.Query().Get("N")
 		n := r.URL.Query().Get("n")
@@ -62,8 +61,7 @@ func gettopHnd(w http.ResponseWriter, r *http.Request) {
 				io.WriteString(w, json) // wrong parameter
 			}
 		} else {
-			fmt.Println(n)
-			json, err := util.TopWordsJson(list)
+			json, err := util.TopWordsJson(data.GetTop(n))
 			if err != nil {
 				http.Error(w, http.StatusText(503), 503)
 			} else {

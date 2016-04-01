@@ -23,6 +23,11 @@ type HttpConfig struct {
 	Port int
 }
 
+type DataConfig struct {
+	BufferSize int
+	Debug      bool
+}
+
 func Log(userMessage string, v interface{}) {
 	if v != nil {
 		s := fmt.Sprintf(":%s  %v\n", userMessage, v)
@@ -56,12 +61,13 @@ func InitLog() {
 	Logger = log.New(logg, "TestServers: ", log.LstdFlags)
 }
 
-func ReadConfig() (*TcpConfig, *HttpConfig) {
+func ReadConfig() (*TcpConfig, *HttpConfig, *DataConfig) {
 	const MIN_RUNES = 2
 
 	iniFile := "testservers.ini"
 	tcpCfg := new(TcpConfig)
 	httpCfg := new(HttpConfig)
+	dataCfg := new(DataConfig)
 	cfg, err := ini.Load([]byte(""), iniFile)
 	Err("no ini file", err)
 
@@ -80,5 +86,10 @@ func ReadConfig() (*TcpConfig, *HttpConfig) {
 	httpCfg.Port, err = cfg.Section("http").Key("port").Int()
 	Err("Wrong ini-value for http port", err)
 
-	return tcpCfg, httpCfg
+	dataCfg.BufferSize, err = cfg.Section("data").Key("buffersize").Int()
+	Err("Wrong ini-value for data buffersize", err)
+	dataCfg.Debug, err = cfg.Section("data").Key("debug").Bool()
+	Err("Wrong ini-value for data debug", err)
+
+	return tcpCfg, httpCfg, dataCfg
 }
