@@ -9,6 +9,9 @@ import (
 )
 
 const PROTOCOL = "tcp"
+const LISTEN_MAX_ERR = 50
+
+var listenerErrCount int
 
 func Run(cfg *util.TcpConfig) {
 	listener, err := net.Listen(PROTOCOL, fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
@@ -17,9 +20,17 @@ func Run(cfg *util.TcpConfig) {
 	defer listener.Close()
 
 	for {
-		conn, err := listener.Accept()
-		util.Err("Error accepting:", err)
-		go handler(conn, cfg.BufferSize, cfg.MinRunes)
+		if conn, err := listener.Accept(); err != nil {
+			listenerErrCount += 1
+			if listenerErrCount < LISTEN_MAX_ERR {
+				util.Log(fmt.Sprintf("Accepting tcp error N:%d:", listenerErrCount), err)
+			} else {
+				util.Err("Quit with max tcp errors", err)
+			}
+
+		} else {
+			go handler(conn, cfg.BufferSize, cfg.MinRunes)
+		}
 	}
 }
 

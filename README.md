@@ -38,8 +38,8 @@ and returns top received words in json
 ```json
 {"count":3,"top_words":["zulu","alfa","bravo"]}
 ```
-> count = 3 is a real count value for top word list
-> words with equal count values sorts by name
+> count = 3 is a real count value for top word list, 
+> in case with equal count values sorts by name
 
 ### data setting
 
