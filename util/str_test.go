@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestRegSplit(t *testing.T) {
+func Test_RegSplit(t *testing.T) {
 	testieData := "alfa bravo    tango"
 	list := RegSplit(testieData, "[^\\S]+")
 	if len(list) != 3 {
@@ -13,7 +13,7 @@ func TestRegSplit(t *testing.T) {
 	}
 }
 
-func TestWordsCheckList(t *testing.T) {
+func Test_WordsCheckList(t *testing.T) {
 	testieData := []string{"alfa", "танго", "sa"}
 	listOk, listBad := WordsCheckList(testieData, 4)
 	if !(len(listOk) == 2) && (len(listBad) == 1) {

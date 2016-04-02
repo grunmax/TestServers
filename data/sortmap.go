@@ -1,6 +1,6 @@
 package data
 
-// sort a map's keys in descending order of its values.
+// sort map keys by values
 
 import "sort"
 

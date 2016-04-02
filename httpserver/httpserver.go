@@ -12,7 +12,7 @@ import (
 
 const (
 	ERR_PARAM_CODE   = 1
-	ERR_PARAM_TEXT   = "wrong parameter"
+	ERR_PARAM_TEXT   = "wrong parameter value"
 	MSG_NOPARAM_CODE = 1
 	MSG_NOPARAM_TEXT = "no parameter"
 )
@@ -31,8 +31,7 @@ func iconHndstub(w http.ResponseWriter, r *http.Request) {
 }
 
 func rootHnd(w http.ResponseWriter, r *http.Request) {
-	util.Log("HTTP request:", r.RequestURI)
-	io.WriteString(w, "Hello")
+	io.WriteString(w, "Hi")
 }
 
 func gettopHnd(w http.ResponseWriter, r *http.Request) {

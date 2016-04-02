@@ -8,8 +8,17 @@ import (
 	"github.com/go-ini/ini"
 )
 
+const INI_FILE = "testservers.ini"
+const MIN_RUNES = 2
+
 var errorlog *os.File
 var Logger *log.Logger
+
+type Config struct {
+	Tcp  TcpConfig
+	Http HttpConfig
+	Data DataConfig
+}
 
 type TcpConfig struct {
 	Host       string
@@ -49,7 +58,7 @@ func ErrPanic(userMessage string, e interface{}) {
 	if e != nil {
 		s := fmt.Sprintf("ERROR:%s  %v\n", userMessage, e)
 		fmt.Printf(s)
-		Logger.Panicf(s)
+		Logger.Panic(s)
 	}
 }
 
@@ -61,35 +70,30 @@ func InitLog() {
 	Logger = log.New(logg, "TestServers: ", log.LstdFlags)
 }
 
-func ReadConfig() (*TcpConfig, *HttpConfig, *DataConfig) {
-	const MIN_RUNES = 2
-
-	iniFile := "testservers.ini"
-	tcpCfg := new(TcpConfig)
-	httpCfg := new(HttpConfig)
-	dataCfg := new(DataConfig)
-	cfg, err := ini.Load([]byte(""), iniFile)
+func ReadConfig() *Config {
+	cfg := new(Config)
+	ini_, err := ini.Load([]byte(""), INI_FILE)
 	Err("no ini file", err)
 
-	tcpCfg.Host = cfg.Section("tcp").Key("host").String()
-	tcpCfg.Port, err = cfg.Section("tcp").Key("port").Int()
+	cfg.Tcp.Host = ini_.Section("tcp").Key("host").String()
+	cfg.Tcp.Port, err = ini_.Section("tcp").Key("port").Int()
 	Err("Wrong ini-value for tcp port", err)
-	tcpCfg.BufferSize, err = cfg.Section("tcp").Key("buffersize").Int()
+	cfg.Tcp.BufferSize, err = ini_.Section("tcp").Key("buffersize").Int()
 	Err("Wrong ini-value for buffersize", err)
-	tcpCfg.MinRunes, err = cfg.Section("tcp").Key("minrunes").Int()
+	cfg.Tcp.MinRunes, err = ini_.Section("tcp").Key("minrunes").Int()
 	Err("Wrong ini-value for minrunes", err)
-	if tcpCfg.MinRunes < MIN_RUNES {
+	if cfg.Tcp.MinRunes < MIN_RUNES {
 		Err(fmt.Sprintf("Minimal value for word symbols is %d", MIN_RUNES), "")
 	}
 
-	httpCfg.Host = cfg.Section("http").Key("host").String()
-	httpCfg.Port, err = cfg.Section("http").Key("port").Int()
+	cfg.Http.Host = ini_.Section("http").Key("host").String()
+	cfg.Http.Port, err = ini_.Section("http").Key("port").Int()
 	Err("Wrong ini-value for http port", err)
 
-	dataCfg.BufferSize, err = cfg.Section("data").Key("buffersize").Int()
+	cfg.Data.BufferSize, err = ini_.Section("data").Key("buffersize").Int()
 	Err("Wrong ini-value for data buffersize", err)
-	dataCfg.Debug, err = cfg.Section("data").Key("debug").Bool()
+	cfg.Data.Debug, err = ini_.Section("data").Key("debug").Bool()
 	Err("Wrong ini-value for data debug", err)
 
-	return tcpCfg, httpCfg, dataCfg
+	return cfg
 }

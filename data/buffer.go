@@ -15,7 +15,6 @@ func Init(cfg *util.DataConfig) {
 	buff = make(chan []string, cfg.BufferSize)
 	dataMap = map[string]int{}
 	util.Log("buffer size:", cfg.BufferSize)
-	util.Log("storage init", "")
 }
 
 func Put(list []string) {
@@ -25,7 +24,7 @@ func Put(list []string) {
 			fmt.Println("buffer <-", list)
 		}
 	default:
-		util.Log("buffer full !!!", list)
+		util.Log("buffer is full !!!", list)
 	}
 }
 

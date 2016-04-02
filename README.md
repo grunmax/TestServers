@@ -1,8 +1,8 @@
 # TestServers
 Test golang project with tcp and http servers.
 
-> This test app reads word list by tcp, sends data to non-blocking buffer in concurrent way. 
-> Also it reads synchronously from buffer and increment value in storage map for each received word (key).
+> This app reads word list by tcp, sends data to non-blocking buffer in concurrent way. 
+> Also reads synchronously from buffer and increment value in storage map for each received word (key).
 > Http server makes json for top N words received.
 > All data store in memory only.
 
@@ -31,16 +31,18 @@ Config params in INI file:
  - host = localhost //
  - port = 8000 //
 
-http server has one test api:
-[http://localhost:8000/top?N=3](http://localhost:8000/top?N=3)
+http server has only one test api:
+[http://localhost:8000/top?N=5](http://localhost:8000/top?N=5)
 
 and returns top received words in json
 ```json
 {"count":3,"top_words":["zulu","alfa","bravo"]}
 ```
+> count = 3 is a real count value for top word list
+> words with equal count values sorts by name
 
 ### data setting
 
 Config params in INI file:
- - buffersize = 20 // "slots" in channel
- - debug = true // visualize passing data through channel (console only)
+ - buffersize = 20 // "slots" in buffered channel (received lists)
+ - debug = true // visualize passing data in console

@@ -7,18 +7,16 @@ import (
 	"github.com/grunmax/TestServers/util"
 )
 
-var cfgTcp *util.TcpConfig
-var cfgHttp *util.HttpConfig
-var cfgData *util.DataConfig
+var cfg *util.Config
 
 func init() {
 	util.InitLog()
-	cfgTcp, cfgHttp, cfgData = util.ReadConfig()
-	data.Init(cfgData)
+	cfg = util.ReadConfig()
+	data.Init(&cfg.Data)
 }
 
 func main() {
 	go data.Run()
-	go tcpserver.Run(cfgTcp)
-	httpserver.Run(cfgHttp)
+	go tcpserver.Run(&cfg.Tcp)
+	httpserver.Run(&cfg.Http)
 }
