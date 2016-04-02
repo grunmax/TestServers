@@ -44,12 +44,13 @@ func save(list []string) {
 		if count == 0 {
 			dataMap[word] = 1
 		} else {
-			dataMap[word] = count + 1
+			count += 1
+			dataMap[word] = count
 		}
 	}
 	if debugMode {
 		fmt.Println(dataMap)
-		fmt.Println("top:", getTopByValue(dataMap, 3))
+		fmt.Println("top 3:", getTopByValue(dataMap, 3))
 	}
 }
 

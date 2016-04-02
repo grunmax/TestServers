@@ -2,7 +2,7 @@
 Test golang project with tcp and http servers.
 
 > This app reads word list by tcp, sends data to non-blocking buffer in concurrent way. 
-> Also reads synchronously from buffer and increment value in storage map for each received word (key).
+> Also reads synchronously from buffer and increment value in storage map for each received word/key.
 > Http server makes json for top N words received.
 > All data store in memory only.
 
@@ -32,7 +32,7 @@ Config params in INI file:
  - port = 8000 //
 
 http server has only one test api:
-[http://localhost:8000/top?N=5](http://localhost:8000/top?N=5)
+[http://localhost:8000/top?N=3](http://localhost:8000/top?N=3)
 
 and returns top received words in json
 ```json

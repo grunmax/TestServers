@@ -11,10 +11,9 @@ import (
 const PROTOCOL = "tcp"
 const LISTEN_MAX_ERR = 50
 
-var listenerErrCount int
-
 func Run(cfg *util.TcpConfig) {
 	listener, err := net.Listen(PROTOCOL, fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
+	listenerErrCount := 0
 	util.Err("Error tcp listening:", err)
 	util.Log(fmt.Sprintf("Listening %s on %s:%d", PROTOCOL, cfg.Host, cfg.Port), "")
 	defer listener.Close()
